@@ -95,8 +95,34 @@ Dengan begitu, saya dapat melihat halaman `main` dengan perintah `python manage.
 Langkah terakhir, saya melakukan *deploy* ke Adaptable dengan memilih `Python App Template` sebagai *template deployment* dan `PostgreSQL` sebagai *database type* yang akan digunakan.
 
 ## **Bagan**
+![alt-text](image/bagan.jpg)
+
+Ketika *web browser* menerima permintaan HTTP aplikasi `main` dari pengguna, terjadi URL *mapping* oleh `urls.py` untuk meneruskan permintaan HTTP ke `views.py` berdasarakan permintaan URL nya. Setelah itu, HTTP *request* ini akan dikembalikan oleh *view* menjadi HTTP *response* berupa HTML *page*. Dalam pengembalian ini, `views.py` akan mengakses data yang dibutuhkan melalui `models.py` dan data tersebut ditampilkan menggunakan template `main.html`.
 
 ## **Virtual Environment**
+Virtual Environment digunakan untuk memisahkan *packages* dan *dependencies* yang berbeda antar proyek dalam satu perangkat yang sama.
+Kita bisa saja membuat aplikasi web berbasis Django tanpa menggunakan *virtual environment*. Akan tetapi, dapat terjadi risiko konflik *dependencies* antar satu proyek dengan proyek lainnya sehingga proyek yang bangun akan menjadi kacau.
 
 ## **MVC, MVT, dan MVVM**
+Django menggunakan pola arsitektur MVT (Model-View-Template). Terdapat pola-pola lain seperti MVC dan MVVM.
+
+Model: Mengelola data.
+View:  Menerima input dan menampilkan informasi kepada pengguna.
+
+#### 1. MVC (Model-View-Controller)
+Controller: Berinteraksi dengan menghubungkan Model dan View sebagai pengatur *app flow* dan pengelola permintaan pengguna.
+
+#### 2. MVT (Model-View-Template)
+Template: Mengatur tampilan HTML dan menggunakan data dari Model.
+
+#### 3. MVVM (Model-View-Viewmodel)
+Viewmodel: Mengelola interaksi dan penghubung antara Model dan View serta mengubah data dari Model ke format yang dapat ditampilkan oleh View.
+
+Perbedaan ketika pola ini yaitu:
+
+|                                          MVC                                          |                                               MVT                                                |                                                                          MVVM                                                                           |
+|:-------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------:|
+|                            Input diterima oleh Controller                             |                                     Input diterima oleh View                                     |                                                                Input diterima oleh View                                                                 |
+|                       View dan Controller berelasi many-to-many                       |                              View dan Template berelasi one-to-one                               |                                                         View dan Viewmodel berelasi one-to-many                                                         |
+| View tidak memiliki referensi ke Controller (panah satu arah dari Controller ke View) | View menyimpan referensi ke Template dan Template bekerja jika dipicu dari View (panah dua arah) | View tidak memiliki referensi ke Model dan sebaliknya. Viewmodel lah yang bertugas menghubungkan View dan Model. Dari sinilah nama Viewmodel digunakan. |
 
