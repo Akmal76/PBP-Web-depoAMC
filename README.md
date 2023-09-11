@@ -9,7 +9,7 @@ https://depoamc.adaptable.app/main/
 
 ## **Implementasi Aplikasi**
 * ### Membuat proyek Django
-Pertama, saya membuat direktori dan menyiapkan *dependencies* pada `requirements.txt` untuk menyiapakan proyek Django.
+Pertama, saya membuat direktori dan menyiapkan *dependencies* pada `requirements.txt` untuk menyiapkan proyek Django.
 
 Berikut adalah isi dari berkas `requirements.txt`.
 ```
