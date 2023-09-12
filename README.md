@@ -118,7 +118,7 @@ Template: Mengatur tampilan HTML dan menggunakan data dari Model.
 #### 3. MVVM (Model-View-Viewmodel)
 Viewmodel: Mengelola interaksi dan penghubung antara Model dan View serta mengubah data dari Model ke format yang dapat ditampilkan oleh View.
 
-Perbedaan ketika pola ini yaitu:
+Perbedaan ketiga pola ini yaitu:
 
 |                                          MVC                                          |                                               MVT                                                |                                                                          MVVM                                                                           |
 |:-------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------:|
