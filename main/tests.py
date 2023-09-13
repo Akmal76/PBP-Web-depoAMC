@@ -1,4 +1,5 @@
 from django.test import TestCase, Client
+from main.models import Item
 
 # Create your tests here.
 class mainTest(TestCase):
@@ -9,3 +10,9 @@ class mainTest(TestCase):
     def test_main_using_main_template(self):
         response = Client().get('/main/')
         self.assertTemplateUsed(response, 'main.html')
+
+    def test_item_amount_non_negative_or_description_empty_string(self):
+        items = Item.objects.all()
+        for item in items:
+            self.assertGreaterEqual(item.amount, 0)
+            self.assertGreater(len(item.description), 0)
