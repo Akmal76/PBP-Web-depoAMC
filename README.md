@@ -98,13 +98,15 @@ def create_item(request):
 
 3. Tampilkan data *item* dalam bentuk tabel dan tambahkan tombol `Add New Item` pada `main.html`.
 ```python
-<table>
+    <table>
         <tr>
             <th>Name</th>
             <th>Amount</th>
             <th>Description</th>
         </tr>
-    
+        
+        <p> Terdapat <b> {{ itemsSize }} material atau bahan </b> yang tersedia. </p>
+
         {% for item in items %}
             <tr>
                 <td>{{item.name}}</td>
