@@ -8,13 +8,11 @@ from django.core import serializers
 # Create your views here.
 def show_main(request):
     items = Item.objects.all()
-    itemsSize = len(items)
 
     context = {
         'name': 'Akmal Ramadhan',
         'class': 'PBP - D',
         'items': items,
-        'itemsSize': itemsSize,
     }
 
     return render(request, "main.html", context)
