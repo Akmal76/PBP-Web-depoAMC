@@ -149,14 +149,14 @@ def show_json(request):
 
 Untuk format XML dan JSON *by* ID, dalam pengambilan hasil *query* tambahkan *filter* dengan ID tertentu saja.
 
-### Format XML *by* ID
+#### Format XML *by* ID
 ```python
 def show_xml_by_id(request, id):
     data = Item.objects.filter(pk=id)
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
 ```
 
-### Format JSON *by* ID
+#### Format JSON *by* ID
 ```python
 def show_json_by_id(request, id):
     data = Item.objects.filter(pk=id)
