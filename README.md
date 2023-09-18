@@ -156,7 +156,7 @@ def show_xml_by_id(request, id):
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
 ```
 
-## Format JSON *by* ID
+### Format JSON *by* ID
 ```python
 def show_json_by_id(request, id):
     data = Item.objects.filter(pk=id)
