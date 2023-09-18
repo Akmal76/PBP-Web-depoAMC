@@ -164,7 +164,7 @@ def show_json_by_id(request, id):
 ```
 ---
 
-### Membuat routing URL
+### Membuat *routing* URL
 Tambahkan kelima *path url* fungsi diatas ke dalam `urlpatterns` pada `urls.py` di folder `main`. Tidak lupa untuk meng-*import*-nya dari `views.py`.
 
 ```python
