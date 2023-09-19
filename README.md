@@ -211,7 +211,9 @@ Berikut adalah tangkapan layar hasil akses URL melalui Postman untuk tiap kelima
 
 ## Referensi
 Java67: [Difference between GET and POST Request in HTTP and REST APIs](https://www.java67.com/2014/08/difference-between-post-and-get-request.html)
+
 Wikimedia: [JSON vs XML.png](https://commons.wikimedia.org/wiki/File:JSON_vs._XML.png)
+
 PBP Ganjil 23/24: [Tutorial 2](https://pbp-fasilkom-ui.github.io/ganjil-2024/docs/tutorial-2)
 
 ## Arsip
