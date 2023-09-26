@@ -13,11 +13,14 @@
     <p><b>Nama: </b>{{ name }}</p>
     <p><b>Kelas: </b>{{ class }}</p>
 
-    <table>
+    <table border = "1">
         <tr>
             <th>Name</th>
             <th>Amount</th>
             <th>Description</th>
+            <th>Add</th>
+            <th>Remove</th>
+            <th>Remove All</th>
         </tr>
         
         <p> Terdapat <b> {{ items.count }} material atau bahan </b> yang tersedia. </p>
@@ -25,17 +28,47 @@
         {% for item in items %}
             <tr>
                 <td>{{item.name}}</td>
-                <td>{{item.amount}}</td>
+                <td><center>{{item.amount}}</center></td>
                 <td>{{item.description}}</td>
+
+                <td href="{% url 'main:create_item' %}">
+                    <form method="POST" action="{% url 'main:add_amount' item.id %}">
+                        {% csrf_token %}
+                        <center> <button> + </button> </center>
+                    </form>
+                </td>
+
+                <td href="{% url 'main:create_item' %}">
+                    <form method="POST" action="{% url 'main:remove_amount' item.id %}">
+                        {% csrf_token %}
+                        <center> <button> - </button> </center>
+                    </form>
+                </td>
+
+                <td href="{% url 'main:create_item' %}">
+                    <form method="POST" action="{% url 'main:remove_all_amount' item.id %}">
+                        {% csrf_token %}
+                        <center> <button> Remove </button> </center>
+                    </form>
+                </td>
+
             </tr>
         {% endfor %}
     </table>
     
-    <br />
+    <!-- <br /> -->
+
+    <h5>Sesi terakhir login: {{ last_login }}</h5>
     
     <a href="{% url 'main:create_item' %}">
         <button>
             Add New Item
+        </button>
+    </a>
+
+    <a href="{% url 'main:logout' %}">
+        <button>
+            Logout
         </button>
     </a>
 {% endblock content %}

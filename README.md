@@ -1,8 +1,152 @@
 # depoAMC
 
-**Tugas 3 - Pemrograman Berbasis Platform - Kelas D**
-
+**Tugas - Pemrograman Berbasis Platform - Kelas D**
 > **depoAMC** adalah aplikasi pengelolaan penyimpanan berbagai macam bahan dan perlengkapan yang diperlukan untuk proyek konstruksi, renovasi, perbaikan, atau pembangunan properti. 
+
+## 👷🪓🪚 **Laman** 🚜⛏️🦺🔨
+https://depoamc.adaptable.app/main/
+
+<details>
+<summary> <b> Tugas 2: Implementasi Model-View-Template (MVT) pada Django </b> </summary>
+
+## **Implementasi Aplikasi**
+* ### Membuat proyek Django
+Pertama, saya membuat direktori dan menyiapkan *dependencies* pada `requirements.txt` untuk menyiapkan proyek Django.
+
+Berikut adalah isi dari berkas `requirements.txt`.
+```
+django
+gunicorn
+whitenoise
+psycopg2-binary
+requests
+urllib3
+```
+Install *dependencies* tersebut dengan perintah `pip install -r requirements.txt` pada *virtual environment*. Setelah itu, proyek dibuat dengan menjalankan perintah `django-admin startproject depoAMC .` dan mengunggahnya ke repositori GitHub baru.
+
+* ### Membuat aplikasi `main`
+Pada direktori `depoAMC`, aktifkan *virtual environment* dan membuat aplikasi baru bernama `main` dengan perintah `python manage.py startapp main`. Daftarkan `main` ke dalam proyek dengan menambahkan `'main'` pada variabel `INSTALLED_APPS` yang berada di berkas `settings.py`.
+```python
+INSTALLED_APPS = [
+    ...,
+    'main',
+    ...
+]
+```
+
+* ### Membuat model aplikasi `main`
+Model adalah bagian yang berhubungan dengan _database_. Pada berkas `models.py` di direktori `main`, saya mendefinisikan model sederhana baru dengan kode berikut ini.
+```python
+from django.db import models
+
+# Create your models here.
+class Item(models.Model):
+    name = models.CharField(max_length=255)
+    amount = models.IntegerField()
+    description = models.TextField()
+```
+Tidak lupa untuk melakukan migrasi model dengan perintah `python manage.py makemigrations` dan menerapkannya ke *database* lokal dengan perintah `python manage.py migrate`.
+
+* ### Membuat dan Menghubungkan Fungsi `views.py` dengan Template
+Akan dilakukan *rendering* tampilan HTML dengan menggunakan data yang diberikan. Pada berkas `views.py` tambahkan `import render` dan fungsi `show_main` untuk menampilkan halaman `main.html` dengan kode dibawah ini.
+```python
+from django.shortcuts import render
+
+def show_main(request):
+    context = {
+        'name': 'Akmal Ramadhan',
+        'class': 'PBP - D'
+    }
+
+    return render(request, "main.html", context)
+```
+Pada `main.html`, saya meletakkan variabel yang dapat digantikan oleh data yang telah diambil dari model seperti dibawah ini.
+```python
+<p><b>Nama: </b>{{ name }}</p>
+<p><b>Kelas: </b>{{ class }}</p>
+```
+
+* ### Melakukan *routing* aplikasi `main`
+Untuk mengatur URL pada aplikasi `main`, saya membuat berkas `urls.py` pada aplikasi `main` yang berisikan kode berikut ini.
+```python
+from django.urls import path
+from main.views import show_main
+
+app_name = 'main'
+
+urlpatterns = [
+    path('', show_main, name='show_main'),
+]
+```
+Agar URL proyek (`depoAMC`) dapat mengimpor URL aplikasi (`main`)
+, maka pada berkas `urls.py` di `depoAMC` saya tambahkan fungsi `include` dari `django.urls` dan menambahkan URL ke tampilan `main` di dalam variabel `urlpatterns`.
+```python
+...
+from django.urls import path, include
+...
+
+urlpatterns = [
+    ...
+    path('main/', include('main.urls')),
+    ...
+]
+```
+Dengan begitu, saya dapat melihat halaman `main` dengan perintah `python manage.py runserver` di [http://localhost:8000/main/](http://localhost:8000/main/)
+
+* ### Melakukan *deployment* ke Adaptable
+Langkah terakhir, saya melakukan *deploy* ke Adaptable dengan memilih `Python App Template` sebagai *template deployment* dan `PostgreSQL` sebagai *database type* yang akan digunakan. Pilih versi Python dengan versi lokal dan masukan _command_ `python manage.py && gunicorn DepoAMC.wsgi` pada `Start Command`.
+
+## **Bagan**
+![](image/bagan.jpg)
+
+Ketika *web browser* menerima permintaan HTTP aplikasi `main` dari pengguna, terjadi URL *mapping* oleh `urls.py`. Setelah _mapping_ selesai dan ditemukan, fungsi pada `views.py` dipanggil sesuai dengan permintaan URL nya. Setelah itu, HTTP *request* ini akan dikembalikan oleh *view* menjadi HTTP *response* berupa HTML *page*. Dalam pengembalian ini, `views.py` akan mengakses data yang dibutuhkan dari `models.py` dan data tersebut ditampilkan menggunakan template `main.html`.
+
+## **Virtual Environment**
+Virtual Environment digunakan untuk memisahkan *packages* dan *dependencies* yang berbeda antar proyek dalam satu perangkat yang sama. Misalkan ketika ada dua proyek yang menggunakan versi Python yang berbeda. Dengan _virtual environment_, versi yang berbeda ini tidak saling mempengaruhi kedua proyek satu sama lain.
+
+Kita bisa saja membuat aplikasi web berbasis Django tanpa menggunakan *virtual environment*. Akan tetapi, dapat terjadi risiko konflik *dependencies* antar satu proyek dengan proyek lainnya sehingga proyek yang bangun akan menjadi kacau.
+
+## **MVC, MVT, dan MVVM**
+Django menggunakan pola arsitektur MVT (Model-View-Template). Terdapat pola-pola lain seperti MVC dan MVVM.
+
+Model: Mengelola data.
+
+View:  Menerima input dan menampilkan informasi kepada pengguna.
+
+#### 1. MVC (Model-View-Controller)
+![Sumber: GeeksforGeeks](https://media.geeksforgeeks.org/wp-content/uploads/20201002214740/MVCSchema.png)
+
+Controller: Berinteraksi dengan menghubungkan Model dan View sebagai pengatur *app flow* dan pengelola permintaan pengguna.
+
+#### 2. MVT (Model-View-Template)
+![Sumber: javaTpoint](https://www.javatpoint.com/django/images/django-mvt-based-control-flow.png)
+
+Template: Mengatur tampilan HTML dan menggunakan data dari Model.
+
+#### 3. MVVM (Model-View-Viewmodel)
+![Sumber: GeeksforGeeks](https://media.geeksforgeeks.org/wp-content/uploads/20201002215007/MVVMSchema.png)
+
+Viewmodel: Mengelola interaksi dan penghubung antara Model dan View serta mengubah data dari Model ke format yang dapat ditampilkan oleh View.
+
+Perbedaan ketiga pola ini yaitu:
+
+|                                          MVC                                          |                                               MVT                                                |                                                                          MVVM                                                                           |
+|:-------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------:|
+|                            Input diterima oleh Controller                             |                                     Input diterima oleh View                                     |                                                                Input diterima oleh View                                                                 |
+|                       View dan Controller berelasi many-to-many                       |                              View dan Template berelasi one-to-one                               |                                                         View dan Viewmodel berelasi one-to-many                                                         |
+| View tidak memiliki referensi ke Controller (panah satu arah dari Controller ke View) | View menyimpan referensi ke Template dan Template bekerja jika dipicu dari View (panah dua arah) | View tidak memiliki referensi ke Model dan sebaliknya. Viewmodel lah yang bertugas menghubungkan View dan Model. Dari sinilah nama Viewmodel digunakan. |
+
+## Referensi
+GeeksforGeeks: [Difference Between MVC, MVP and MVVM Architecture Pattern in Android](https://www.geeksforgeeks.org/difference-between-mvc-mvp-and-mvvm-architecture-pattern-in-android/)
+
+Tomy's Blog: [MVC, MVP and MVVM](https://tomyrhymond.wordpress.com/2011/09/16/mvc-mvp-and-mvvm/)
+
+javaTpoint: [Django MVT](https://www.javatpoint.com/django-mvt)
+
+</details>
+
+<details>
+<summary> <b> Tugas 3: Implementasi Form dan Data Delivery pada Django </b> </summary>
 
 ## Perbedaan antara form `GET` dan form `POST` dalam Django
 *Form* adalah cara untuk mengambil data dari pengguna. Data tersebut bisa berupa teks maupun *file*. Terdapat dua metode dalam mengirimkan data dari *browser user* yaitu `GET` dan `POST`.
@@ -215,146 +359,307 @@ Java67: [Difference between GET and POST Request in HTTP and REST APIs](https://
 Wikimedia: [JSON vs XML.png](https://commons.wikimedia.org/wiki/File:JSON_vs._XML.png)
 
 PBP Ganjil 23/24: [Tutorial 2](https://pbp-fasilkom-ui.github.io/ganjil-2024/docs/tutorial-2)
-
-## Arsip
-<details>
-<summary> <b> Tugas 2 </b> </summary>
-
-## 👷🪓🪚 **Laman** 🚜⛏️🦺🔨
-https://depoamc.adaptable.app/main/
-
-## **Implementasi Aplikasi**
-* ### Membuat proyek Django
-Pertama, saya membuat direktori dan menyiapkan *dependencies* pada `requirements.txt` untuk menyiapkan proyek Django.
-
-Berikut adalah isi dari berkas `requirements.txt`.
-```
-django
-gunicorn
-whitenoise
-psycopg2-binary
-requests
-urllib3
-```
-Install *dependencies* tersebut dengan perintah `pip install -r requirements.txt` pada *virtual environment*. Setelah itu, proyek dibuat dengan menjalankan perintah `django-admin startproject depoAMC .` dan mengunggahnya ke repositori GitHub baru.
-
-* ### Membuat aplikasi `main`
-Pada direktori `depoAMC`, aktifkan *virtual environment* dan membuat aplikasi baru bernama `main` dengan perintah `python manage.py startapp main`. Daftarkan `main` ke dalam proyek dengan menambahkan `'main'` pada variabel `INSTALLED_APPS` yang berada di berkas `settings.py`.
-```python
-INSTALLED_APPS = [
-    ...,
-    'main',
-    ...
-]
-```
-
-* ### Membuat model aplikasi `main`
-Model adalah bagian yang berhubungan dengan _database_. Pada berkas `models.py` di direktori `main`, saya mendefinisikan model sederhana baru dengan kode berikut ini.
-```python
-from django.db import models
-
-# Create your models here.
-class Item(models.Model):
-    name = models.CharField(max_length=255)
-    amount = models.IntegerField()
-    description = models.TextField()
-```
-Tidak lupa untuk melakukan migrasi model dengan perintah `python manage.py makemigrations` dan menerapkannya ke *database* lokal dengan perintah `python manage.py migrate`.
-
-* ### Membuat dan Menghubungkan Fungsi `views.py` dengan Template
-Akan dilakukan *rendering* tampilan HTML dengan menggunakan data yang diberikan. Pada berkas `views.py` tambahkan `import render` dan fungsi `show_main` untuk menampilkan halaman `main.html` dengan kode dibawah ini.
-```python
-from django.shortcuts import render
-
-def show_main(request):
-    context = {
-        'name': 'Akmal Ramadhan',
-        'class': 'PBP - D'
-    }
-
-    return render(request, "main.html", context)
-```
-Pada `main.html`, saya meletakkan variabel yang dapat digantikan oleh data yang telah diambil dari model seperti dibawah ini.
-```python
-<p><b>Nama: </b>{{ name }}</p>
-<p><b>Kelas: </b>{{ class }}</p>
-```
-
-* ### Melakukan *routing* aplikasi `main`
-Untuk mengatur URL pada aplikasi `main`, saya membuat berkas `urls.py` pada aplikasi `main` yang berisikan kode berikut ini.
-```python
-from django.urls import path
-from main.views import show_main
-
-app_name = 'main'
-
-urlpatterns = [
-    path('', show_main, name='show_main'),
-]
-```
-Agar URL proyek (`depoAMC`) dapat mengimpor URL aplikasi (`main`)
-, maka pada berkas `urls.py` di `depoAMC` saya tambahkan fungsi `include` dari `django.urls` dan menambahkan URL ke tampilan `main` di dalam variabel `urlpatterns`.
-```python
-...
-from django.urls import path, include
-...
-
-urlpatterns = [
-    ...
-    path('main/', include('main.urls')),
-    ...
-]
-```
-Dengan begitu, saya dapat melihat halaman `main` dengan perintah `python manage.py runserver` di [http://localhost:8000/main/](http://localhost:8000/main/)
-
-* ### Melakukan *deployment* ke Adaptable
-Langkah terakhir, saya melakukan *deploy* ke Adaptable dengan memilih `Python App Template` sebagai *template deployment* dan `PostgreSQL` sebagai *database type* yang akan digunakan. Pilih versi Python dengan versi lokal dan masukan _command_ `python manage.py && gunicorn DepoAMC.wsgi` pada `Start Command`.
-
-## **Bagan**
-![](image/bagan.jpg)
-
-Ketika *web browser* menerima permintaan HTTP aplikasi `main` dari pengguna, terjadi URL *mapping* oleh `urls.py`. Setelah _mapping_ selesai dan ditemukan, fungsi pada `views.py` dipanggil sesuai dengan permintaan URL nya. Setelah itu, HTTP *request* ini akan dikembalikan oleh *view* menjadi HTTP *response* berupa HTML *page*. Dalam pengembalian ini, `views.py` akan mengakses data yang dibutuhkan dari `models.py` dan data tersebut ditampilkan menggunakan template `main.html`.
-
-## **Virtual Environment**
-Virtual Environment digunakan untuk memisahkan *packages* dan *dependencies* yang berbeda antar proyek dalam satu perangkat yang sama. Misalkan ketika ada dua proyek yang menggunakan versi Python yang berbeda. Dengan _virtual environment_, versi yang berbeda ini tidak saling mempengaruhi kedua proyek satu sama lain.
-
-Kita bisa saja membuat aplikasi web berbasis Django tanpa menggunakan *virtual environment*. Akan tetapi, dapat terjadi risiko konflik *dependencies* antar satu proyek dengan proyek lainnya sehingga proyek yang bangun akan menjadi kacau.
-
-## **MVC, MVT, dan MVVM**
-Django menggunakan pola arsitektur MVT (Model-View-Template). Terdapat pola-pola lain seperti MVC dan MVVM.
-
-Model: Mengelola data.
-
-View:  Menerima input dan menampilkan informasi kepada pengguna.
-
-#### 1. MVC (Model-View-Controller)
-![Sumber: GeeksforGeeks](https://media.geeksforgeeks.org/wp-content/uploads/20201002214740/MVCSchema.png)
-
-Controller: Berinteraksi dengan menghubungkan Model dan View sebagai pengatur *app flow* dan pengelola permintaan pengguna.
-
-#### 2. MVT (Model-View-Template)
-![Sumber: javaTpoint](https://www.javatpoint.com/django/images/django-mvt-based-control-flow.png)
-
-Template: Mengatur tampilan HTML dan menggunakan data dari Model.
-
-#### 3. MVVM (Model-View-Viewmodel)
-![Sumber: GeeksforGeeks](https://media.geeksforgeeks.org/wp-content/uploads/20201002215007/MVVMSchema.png)
-
-Viewmodel: Mengelola interaksi dan penghubung antara Model dan View serta mengubah data dari Model ke format yang dapat ditampilkan oleh View.
-
-Perbedaan ketiga pola ini yaitu:
-
-|                                          MVC                                          |                                               MVT                                                |                                                                          MVVM                                                                           |
-|:-------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------:|
-|                            Input diterima oleh Controller                             |                                     Input diterima oleh View                                     |                                                                Input diterima oleh View                                                                 |
-|                       View dan Controller berelasi many-to-many                       |                              View dan Template berelasi one-to-one                               |                                                         View dan Viewmodel berelasi one-to-many                                                         |
-| View tidak memiliki referensi ke Controller (panah satu arah dari Controller ke View) | View menyimpan referensi ke Template dan Template bekerja jika dipicu dari View (panah dua arah) | View tidak memiliki referensi ke Model dan sebaliknya. Viewmodel lah yang bertugas menghubungkan View dan Model. Dari sinilah nama Viewmodel digunakan. |
-
-## Referensi
-GeeksforGeeks: [Difference Between MVC, MVP and MVVM Architecture Pattern in Android](https://www.geeksforgeeks.org/difference-between-mvc-mvp-and-mvvm-architecture-pattern-in-android/)
-
-Tomy's Blog: [MVC, MVP and MVVM](https://tomyrhymond.wordpress.com/2011/09/16/mvc-mvp-and-mvvm/)
-
-javaTpoint: [Django MVT](https://www.javatpoint.com/django-mvt)
-
 </details>
+
+<!-- TODO -->
+# Tugas 4: Implementasi Autentikasi, Session, dan Cookies pada Django
+
+## Django `UserCreationForm`
+`UserCreatoinForm` adalah formulir dari modul `django.contrib.auth.forms` yang disediakan oleh Django untuk membuat dan mendaftarkan pengguna baru dalam aplikasi web kita. 
+ 
+| Kelebihan | Kekurangan |
+| -- | -- |
+| Mudah digunakan | Tidak mendukung banyak kebutuhan autentikasi |
+| Memiliki validasi bawaan | Tidak cocok untuk desain yang kompleks |
+| Integrasi dengan model User | - |
+| Customizable dan Fleksibel | - |
+
+## Perbedaan antara Autentikasi dan Otorisasi
+| Autentikasi | Otorisasi |
+| -- | -- |
+| Proses mengenali identitas bahwa seseorang adalah pengguna yang sah. Dalam Django, autentikasi memastikan bahwa seseorang yang mencoba mengakses situs web kita adalah pengguna yang telah terdaftar. | Proses yang terjadi setelah autentikasi. Dalam Django, otorisasi ditandai `@login_required` pada suatu fungsi untuk mengatur apa yang dapat kita lakukan di dalam situs web setelah kita berhasil login. |
+
+Mengapa penting? **Autentikasi** penting karena memastikan bahwa hanya pengguna sah yang memiliki akses ke akun dan data mereka sedangkan **otorisasi** penting karena mengendalikan apa yang dapat dilakukan pengguna setelah mereka terotentikasi.
+
+## Cookies dalam Django
+**Cookies** adalah *file* kecil yang disimpan saat pengguna berinteraksi dengan sebuah situs web dan berguna untuk menulis beberapa catatan kecil agar situs web dapat mengingat tentang siapa Anda dan apa yang Anda lakukan.
+Data sesi adalah informasi yang ingin disimpan ketika pengguna berkunjung di situs web kita. Django menggunakan cookies untuk menjaga informasi ini tetap terhubung dengan pengguna.
+
+## Keamanan Penggunaan Cookies
+Walaupun cookies berguna, namun kita perlu memperhatikan beberapa risiko yang harus kita waspadai karena keamanan cookie sendiri juga bergantung pada aktivitas pengguna. Dengan cookie, bisa saja data kita yang tersimpan secara sementara itu dicuri dan disalahgunakan oleh penyerang.
+
+Menurut saya, kita harus melakukan hal berikut.
+* Cek apakah cookie melacak perilaku pengguna
+* Cek apakah cookie menyimpan informasi sensitif atau pribadi seperti kata sandi, nomor kredit, dan lain-lain
+* Pastikan menggunakan koneksi HTTPS yang aman 
+* Selalu menutup *web browser* ketika sedang tidak digunakan
+* Tidak meminjamkan *web browser* yang kita gunakan ke orang lain.
+
+
+## Implementasi Autentikasi, Session, dan Cookies
+### Membuat Fungsi dan Form Registrasi
+Pada tugas kali ini, kita ingin membuat halaman utama kita hanya bisa diakses oleh pengguna yang sudah mempunyai akun saja. Untuk mendaftarkan pengguna, diperlukan form registrasi.
+
+Pada `views.py` folder main, saya menambahkan fungsi `register` dan mengimport beberapa modul berikut ini.
+```python
+from django.shortcuts import redirect
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages  
+
+def register(request):
+    form = UserCreationForm()
+
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your account has been successfully created!')
+            return redirect('main:login')
+    context = {'form':form}
+    return render(request, 'register.html', context)
+```
+Setelah itu, saya membuat halaman registrasi `register.html` pada `main/templates` dengan kode berikut.
+```html
+{% extends 'base.html' %}
+
+{% block meta %}
+    <title>Register</title>
+{% endblock meta %}
+
+{% block content %}  
+
+<div class = "login">
+    
+    <h1>Register</h1>  
+
+        <form method="POST" >  
+            {% csrf_token %}  
+            <table>  
+                {{ form.as_table }}  
+                <tr>  
+                    <td></td>
+                    <td><input type="submit" name="submit" value="Daftar"/></td>  
+                </tr>  
+            </table>  
+        </form>
+
+    {% if messages %}  
+        <ul>   
+            {% for message in messages %}  
+                <li>{{ message }}</li>  
+                {% endfor %}  
+        </ul>   
+    {% endif %}
+
+</div>  
+
+{% endblock content %}
+```
+Terakhir, menambahkan *url path* pada `urls.py`.
+```python
+from main.views import register
+
+urlpatterns = [
+    ...
+    path('register/', register, name='register'),
+    ...
+]
+```
+
+### Membuat Fungsi Login dan Merestriksi Akses Halaman Main
+Setelah membuat form registrasi, saya membuat fitur login untuk mengakses pengguna yang terdaftar.
+
+Pada `views.py` folder main, saya menambahkan fungsi `login_user` dan mengimport beberapa modul berikut ini.
+```python
+from django.contrib.auth import authenticate, login
+
+def login_user(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('main:show_main')
+        else:
+            messages.info(request, 'Sorry, incorrect username or password. Please try again.')
+    context = {}
+    return render(request, 'login.html', context)
+```
+Setelah itu, saya membuat halaman login `login.html` pada `main/templates` dengan kode berikut.
+```html
+{% extends 'base.html' %}
+
+{% block meta %}
+    <title>Login</title>
+{% endblock meta %}
+
+{% block content %}
+
+<div class = "login">
+
+    <h1>Login</h1>
+
+    <form method="POST" action="">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>Username: </td>
+                <td><input type="text" name="username" placeholder="Username" class="form-control"></td>
+            </tr>
+                    
+            <tr>
+                <td>Password: </td>
+                <td><input type="password" name="password" placeholder="Password" class="form-control"></td>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td><input class="btn login_btn" type="submit" value="Login"></td>
+            </tr>
+        </table>
+    </form>
+
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}     
+        
+    Don't have an account yet? <a href="{% url 'main:register' %}">Register Now</a>
+
+</div>
+
+{% endblock content %}
+```
+Terakhir, menambahkan *url path* pada `urls.py`.
+```python
+from main.views import login_user
+
+urlpatterns = [
+    ...
+    path('login/', login_user, name='login'),
+    ...
+]
+```
+
+Untuk membatasi akses halaman main, pada `views.py` tambahkan modul dan decorator berikut ini.
+```python
+from django.contrib.auth.decorators import login_required
+
+@login_required(login_url='/login')  --> Decorator
+def show_main(request):
+```
+
+### Membuat Fungsi Logout
+Sekrang pengguna sudah berhasil melakukan login. Lalu, bagaimana dengan fitur logout?
+
+Pada `views.py` folder main, saya menambahkan fungsi `logout_user` dan mengimport beberapa modul berikut ini.
+```python
+from django.contrib.auth import logout
+
+def logout_user(request):
+    logout(request)
+    return redirect('main:login')
+```
+Setelah itu, saya membuat tombol `"logout"` di `main.html` pada `main/templates` dengan kode berikut.
+```html
+    ...
+    <a href="{% url 'main:logout' %}">
+        <button>
+            Logout
+        </button>
+    </a>
+    ...
+```
+Terakhir, menambahkan *url path* pada `urls.py`.
+```python
+from main.views import logout_user
+
+urlpatterns = [
+    ...
+    path('logout/', logout_user, name='logout'),
+    ...
+]
+```
+
+### Menghubungkan `Item` dengan `User`
+Agar pengguna yang terotorisasi dapat melihat produk-produknya sendiri, kita perlu menghubungkan setiap objek `Item` untuk setiap `User`.
+
+Pada `models.py`, saya menambahkan kode berikut.
+```python
+from django.contrib.auth.models import User
+
+class Item(models.Model):
+    ...
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+```
+
+Saya juga mengubah sedikit kode pada fungsi `create_item` di `views.py` menjadi seperti berikut.
+```python
+def create_item(request):
+    form = ItemForm(request.POST or None)
+
+    if form.is_valid() and request.method == "POST":
+        item = form.save(commit=False)
+        item.user = request.user
+        item.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "create_item.html", context)
+```
+Terakhir, agar nama penggunanya berubah tambahkan kode berikut pada fungsi `show_main`.
+```python
+def show_main(request):
+    items = Item.objects.filter(user=request.user)
+
+    context = {
+        'name': request.user.username,
+    ...
+```
+Simpan semua perubahan diatas dan jangan lupa untuk melakukan `python manage.py makemigrations` dan `python manage.py migrate`.
+
+### Menerapkan Cookies
+Untuk menampilkan data *last login* pengguna, kita bisa menggunakan cookies.
+
+Saya menambahkan modul berikut pada `views.py` direktori `main`. 
+```python
+import datetime
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+```
+Ganti blok `if user is not None` dengan kode berikut pada fungsi `login_user` untuk menampilkan waktu terakhir kali pengguna terotorisasi.
+```python
+...
+if user is not None:
+    login(request, user)
+    response = HttpResponseRedirect(reverse("main:show_main")) 
+    response.set_cookie('last_login', str(datetime.datetime.now()))
+    return response
+...
+```
+Tambahkan informasi cookie *last login* pada fungsi `show_main`.
+```python
+context = {
+    'name': 'Pak Bepe',
+    'class': 'PBP A',
+    'products': products,
+    'last_login': request.COOKIES['last_login'],
+}
+```
+Ubahlah kode `logout_user` menjadi seperti berikut.
+```python
+def logout_user(request):
+    logout(request)
+    response = HttpResponseRedirect(reverse('main:login'))
+    response.delete_cookie('last_login')
+    return response
+```
+Terakhir, tampilkan cookie nya ke dalam `main.html`.
+```html
+...
+<h5>Sesi terakhir login: {{ last_login }}</h5>
+```
