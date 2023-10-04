@@ -681,6 +681,14 @@ p {
 }
 ```
 
+Selain *element selector*, terdapat *selector* lain di CSS.
+| Selector | Deskripsi | Penggunaan |
+| -- | -- | -- |
+| Elemen (`E` tidak diawali `.` atau `#`) | Memilih elemen HTML berdasarkan tipe elemennya (misalnya `<p>`, `<h1>`, `<div>`) | Ketika ingin menerapkan *style* pada elemen tertentu. |
+| Id (`#id`) | Memilih elemen HTML berdasarkan atribut `id` yang unik. | Ketika ingin menerapkan *style* pada elemen dengan ID unik. |
+| Kelas (`.class`) | Memilih elemen HTML berdasarkan atribut `class`. | Ketika ingin menerapkan *style* pada satu atau lebih elemen dengan kelas tertentu atau menggabungkan beberapa elemen dengan *style* yang sama. |
+
+
 ## HTML5 Tag
 | Tag HTML5      | Deskripsi                                   | Contoh Penggunaan                                |
 |----------------|---------------------------------------------|---------------------------------------------------|
