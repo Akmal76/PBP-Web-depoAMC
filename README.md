@@ -361,8 +361,8 @@ Wikimedia: [JSON vs XML.png](https://commons.wikimedia.org/wiki/File:JSON_vs._XM
 PBP Ganjil 23/24: [Tutorial 2](https://pbp-fasilkom-ui.github.io/ganjil-2024/docs/tutorial-2)
 </details>
 
-<!-- TODO -->
-# Tugas 4: Implementasi Autentikasi, Session, dan Cookies pada Django
+<details>
+<summary> <b> Tugas 4: Implementasi Autentikasi, Session, dan Cookies pada Django </b> </summary>
 
 ## Django `UserCreationForm`
 `UserCreatoinForm` adalah formulir dari modul `django.contrib.auth.forms` yang disediakan oleh Django untuk membuat dan mendaftarkan pengguna baru dalam aplikasi web kita. 
@@ -663,3 +663,159 @@ Terakhir, tampilkan cookie nya ke dalam `main.html`.
 ...
 <h5>Sesi terakhir login: {{ last_login }}</h5>
 ```
+</details>
+
+# Tugas 5: Desain Web menggunakan HTML, CSS dan Framework CSS
+
+## *Element Selector* pada CSS
+*Element Selector* pada CSS adalah salah satu jenis *selector* untuk mengubah *style* elemen HTML dengan *tag* yang spesifik. *Element Selector* ini memiliki beberapa manfaat, yaitu:
+* **Konsisten**. Kita bisa menerapkan *default style* untuk beberapa elemen HTML sehingga memiliki tampilan yang konsisten.
+* **Fleksibilitas**. Beberapa elemen yang sama bisa diubah *style* secara mudah dengan *element selector* (Tidak perlu satu-satu).
+* **Efisiensi**. Karena fleksibilitasnya, kita bisa menghemat waktu untuk mengaturnya.
+
+Kapan kita menggunakan *element selector*?
+Pada saat **beberapa elemen yang sama ingin menerapkan *style* yang sama** dan akan digunakan lagi kedepannya. Misal, kita mengubah warna teks untuk semua elemen `<p>`.
+```css
+p {
+  color: red;
+}
+```
+
+## HTML5 Tag
+| Tag HTML5      | Deskripsi                                   | Contoh Penggunaan                                |
+|----------------|---------------------------------------------|---------------------------------------------------|
+| `<html>`       | Mendefinisikan dokumen HTML                  | `<html lang="en">...</html>`                     |
+| `<head>`       | Berisi informasi meta dan tautan stylesheet | `<head><title>Judul Halaman</title></head>`     |
+| `<meta>`       | Memberikan metadata tentang dokumen         | `<meta charset="UTF-8">`                         |
+| `<link>`       | Menghubungkan stylesheet eksternal          | `<link rel="stylesheet" href="style.css">`       |
+| `<style>`      | Mendefinisikan CSS dalam dokumen HTML       | `<style> body { background-color: #f0f0f0; } </style>` |
+| `<div>`        | Kontainer umum untuk mengelompokkan elemen  | `<div class="container">...</div>`             |
+| `<p>`          | Paragraf teks                               | `<p>Ini adalah paragraf.</p>`                   |
+| `<a>`          | Tautan hyperlink                            | `<a href="https://www.example.com">Link</a>`     |
+| `<img>`        | Menampilkan gambar                          | `<img src="gambar.jpg" alt="Deskripsi gambar">` |
+| `<ul>`         | Daftar tak berurutan                        | `<ul><li>Item 1</li><li>Item 2</li></ul>`        |
+| `<ol>`         | Daftar berurutan                            | `<ol><li>Item 1</li><li>Item 2</li></ol>`        |
+| `<li>`         | Item daftar (dalam `<ul>` atau `<ol>`)      | `<ul><li>Item 1</li></ul>`                      |
+| `<h1> - <h6>`  | Heading (judul)                             | `<h1>Judul Utama</h1>`                          |
+| `<input>`      | Input elemen untuk formulir                 | `<input type="text" placeholder="Nama">`        |
+| `<form>`       | Membuat formulir                            | `<form action="/proses.php" method="post">...</form>` |
+| `<center>`     | Membuat konten di tengah  | `<center>Teks tengah</center>`              |
+| `<table>`      | Membuat tabel                               | `<table border="1"><tr><td>Kolom 1</td><td>Kolom 2</td></tr></table>` |
+| `<tr>`         | Baris dalam tabel                           | `<tr><td>Data 1</td><td>Data 2</td></tr>`      |
+| `<td>`         | Sel dalam tabel                             | `<td>Data dalam sel</td>`                      |
+| `<button>`     | Tombol                           | `<button onclick="alert('69')">Angka Favorit</button>` |
+| `<br>`         | Pindah ke baris berikutnya (break line)     | `Teks pertama.<br>Teks kedua.`                 |
+| `<hr>`         | Membuat garis horizontal                    | `<hr>`                                          |
+| `<title>`      | Mendefinisikan judul dokumen (dalam `<head>`) | `<title>Judul Halaman</title>`              |
+
+## *Margin* dan *Padding*
+
+<p align="center"><img src="https://images.ctfassets.net/pdf29us7flmy/6FMwLUnze6f6SQjjxpB5lq/4da8905078cce5668a00b488f913340d/-IND-004-082-_When_and_How_To_Use_Margin_vs._Padding_in_CSS_-_Final.png?w=1440&q=100&fm=avif" width="500"></p>
+
+| Perbedaan | *Margin* | *Padding* |
+| -- | -- | -- |
+| Deskripsi | Ruang kosong di sekitar batas luar elemen HTML. Ini adalah jarak antara elemen dengan elemen lain di sekitarnya. |Ruang kosong di sekitar konten dalam elemen HTML. Ini adalah jarak antara konten elemen dan batas dalam elemen tersebut. |
+| Fungsi | Mengatur jarak antara elemen dengan elemen lain di sekitarnya atau dengan elemen yang berdekatan. | Mengatur jarak antara konten elemen dengan batas dalam elemen tersebut. |
+| Pengaruh terhadap ukuran elemen | Tidak mempengaruhi ukuran sebenarnya dari elemen tersebut. | Mempengaruhi ukuran elemen tersebut. Jika kita menambahkan padding ke elemen, elemen tersebut akan menjadi lebih besar, karena padding menambahkan ruang di dalamnya. |
+| Contoh | Membuat ruang antara dua elemen `<div>` | Memberikan jarak antara teks dalam elemen `<p>` |
+
+Singakatnya, margin adalah jarak di luar elemen, sedangkan padding adalah jarak di dalam elemen.
+
+## Framework CSS: Bootstrap dan Tailwind
+| Aspek | Tailwind CSS | Bootstrap |
+|--|--|--|
+| Konfigurasi | Perlu konfigurasi manual untuk menentukan *style* dan desain yang tepat. | Mudah digunakan dengan desain bawaan. |
+| Kustomisasi | Sangat fleksibel. | Lebih terbatas. |
+| Ukuran File | Lebih kecil karena hanya menggunakan kelas yang dibutuhkan saja. | Lebih besar karena menyediakan lebih banyak komponen dan desain bawaan. |
+| Kesulitan Penggunaan | Sulit untuk pemula karena harus memahami kelas dan struktur. | Mudah dipelajari dan cocok untuk pemula karena komponennya sudah ada. |
+| Kapan Digunakan | Lebih baik digunakan ketika memerlukan kustomisasi desain yang tinggi | Lebih baik digunakan ketika ingin cepat menerapkan tampilan dengan desain yang sudah ada |
+
+## Implementasi Kustomisasi HTML dengan Bootstrap
+Pertama, saya menambahkan *framework* CSS yaitu Bootstrap ke aplikasi. Pada `templates` proyek, buka `base.html`, tambahkan *command* berikut ini pada *tag* `<head>`. Untuk *link* kedua, saya menambahkan *icons* yang disediakan oleh Bootstrap.
+```html
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+```
+### Mengubah `main.html`
+#### Menambahkan *Navigation Bar*
+Saya menggunakan komponen *navigation bar* dari Bootstrap. Penjelasan penggunaannya bisa diliat dalam tautan berikut [ini](https://getbootstrap.com/docs/5.3/components/navbar/).
+
+Implementasi *navigation bar* yang diterapkan seperti ini.
+```html
+<nav class="navbar fixed-top navbar-expand-sm navbar-dark bg-dark">
+        <div class="container">
+            <a href="" class="navbar-brand mb-0 h1"> <i class="bi bi-cone-striped"></i> DepoAMC </a>
+
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item active">
+                    {% comment %} Tombol Add Item {% endcomment %}
+                    <a type="button" href="{% url 'main:create_item' %}" class="btn btn-outline-light btn-sm" style="margin-right: 10px;">
+                        <i class="bi bi-bag-plus"></i>
+                    </a>
+
+                    {% comment %} Tombol Logout {% endcomment %}
+                    <a type="button" href="{% url 'main:logout' %}" class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-box-arrow-right"></i>
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+```
+
+Hasilnya akan seperti ini.
+<p align="center"> <img src="image/navbar.png" width="700"> </p>
+
+## Menggunakan komponen Card untuk laman *login*, *register*, *add item*, dan *edit item* serta daftar *item* pada *inventory*
+Untuk tampilan *inventory*, laman *login*, laman *register*, laman *add item*, dan laman *edit item*, saya menggunakan komponen Bootstrap yaitu Card. Penjelasan penggunaannya bisa diliat dalam tautan berikut [ini](https://getbootstrap.com/docs/5.3/components/navbar/).
+
+Implementasi *inventory* yang saya terapkan seperti ini.
+```html
+<div class="container">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for item in items %}
+                <div class="col">
+                    <div class="card h-100 {% if forloop.last %}text-bg-info{% endif %}">
+                        <div class="card-header" style="display: flex;">
+                            <h5 style="flex-grow: 1;"> {{item.name}} {% if forloop.last %}(Terbaru!){% endif %} </h5>
+                            <a class="btn btn-sm" type="button" href="{% url 'main:remove_all_amount' item.pk %}"> <i class="bi bi-trash"></i> </a>
+                            <a class="btn btn-sm" type="button" href="{% url 'main:edit_item' item.pk %}"> <i class="bi bi-pen"></i> </a>
+                        </div>
+                        
+                        <div class="card-body">
+                            <p class="card-text">{{item.description}}</p>
+                        </div>
+
+                        <div class="card-footer" style="display: flex; justify-content: space-evenly; align-items: center; text-align: center;">
+                            <a class="btn btn-sm" type="button" href="{% url 'main:remove_amount' item.pk %}"> <i class="bi bi-dash-lg"></i> </a>
+                            <h6> {{item.amount}} </h6>
+                            <a class="btn btn-sm" type="button" href="{% url 'main:add_amount' item.pk %}"> <i class="bi bi-plus-lg"></i> </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+```
+
+Hasilnya akan seperti ini.
+<p align="center"> <img src="image/inventory.png" width="700"> </p>
+
+Untuk implementasi laman *login*, *register*, *add item*, dan *edit item*, saya terapkan seperti ini.
+```html
+<div class="container mt-5 pt-5">
+    <div class="row">
+        <div class="m-auto">
+            <div class="card">
+                <!-- Konten -->
+            </div>
+        </div>
+    </div>
+</div>
+```
+Salah satu hasilnya akan seperti ini.
+<p align="center"> <img src="image/add_item.png" width="700"> </p>
+
+## Referensi
+Indeed: [Margin vs. Padding in Web Design: What's the Difference?](https://www.indeed.com/career-advice/career-development/margin-vs-padding)

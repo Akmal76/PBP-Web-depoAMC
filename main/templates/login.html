@@ -8,37 +8,42 @@
 
 <div class = "login">
 
-    <h1>Login</h1>
+    <div class="container mt-5 pt-5">
+        <div class="row">
+            <div class="col-12 col-sm-8 col-md-6 m-auto">
+                <div class="card">
+                    <h1 class="card-header" style="text-align: center;">
+                        <i class="bi bi-door-open"></i> Login
+                    </h1>
 
-    <form method="POST" action="">
-        {% csrf_token %}
-        <table>
-            <tr>
-                <td>Username: </td>
-                <td><input type="text" name="username" placeholder="Username" class="form-control"></td>
-            </tr>
-                    
-            <tr>
-                <td>Password: </td>
-                <td><input type="password" name="password" placeholder="Password" class="form-control"></td>
-            </tr>
+                    <div class="card-body">
+                        <form method="POST" action="">
+                            {% csrf_token %}
+                            <p> Username: </p>
+                            <input type="text" name="username" placeholder="Username" class="form-control my-3 py-2">
+                            <p> Password: </p>
+                            <input type="password" name="password" placeholder="Password" class="form-control my-3 py-2">
+                            <div class="text-center mt-3">
+                                <button class="btn btn-primary" type="submit" value="Login">
+                                    Login
+                                </button>
+                            </div>
+                            <br>
+                            <p> Don't have an account yet? <a href="{% url 'main:register' %}">Register Now</a> </p>
+                        </form>
 
-            <tr>
-                <td></td>
-                <td><input class="btn login_btn" type="submit" value="Login"></td>
-            </tr>
-        </table>
-    </form>
-
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}     
-        
-    Don't have an account yet? <a href="{% url 'main:register' %}">Register Now</a>
+                        {% if messages %}
+                            <ul>
+                                {% for message in messages %}
+                                    <li>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}     
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 

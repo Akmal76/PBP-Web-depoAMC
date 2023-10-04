@@ -1,74 +1,77 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <center>
-        <h1>depoAMC</h1>
-        <img src="https://tr.rbxcdn.com/80fe87c42012957cd6e2c9dd75de797d/420/420/Face/Png" style="width:128px;height:128px;">
-        <pre> "Material Berkualitas, Kepuasan Terjamin." </pre>
-    </center>
+    {% comment %} Padding untuk header {% endcomment %}
+    <style>
+        body {
+            padding-top: 70px;
+            padding-bottom: 70px;
+        }
+    </style>
 
-    <hr>
-    <hr>
+    {% comment %} Navigation Bar {% endcomment %}
+    <nav class="navbar fixed-top navbar-expand-sm navbar-dark bg-dark">
+        <div class="container">
+            <a href="" class="navbar-brand mb-0 h1"> <i class="bi bi-cone-striped"></i> DepoAMC </a>
 
-    <p><b>Nama: </b>{{ name }}</p>
-    <p><b>Kelas: </b>{{ class }}</p>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item active">
+                    {% comment %} Tombol Add Item {% endcomment %}
+                    <a type="button" href="{% url 'main:create_item' %}" class="btn btn-outline-light btn-sm" style="margin-right: 10px;">
+                        <i class="bi bi-bag-plus"></i>
+                    </a>
 
-    <table border = "1">
-        <tr>
-            <th>Name</th>
-            <th>Amount</th>
-            <th>Description</th>
-            <th>Add</th>
-            <th>Remove</th>
-            <th>Remove All</th>
-        </tr>
-        
-        <p> Terdapat <b> {{ items.count }} material atau bahan </b> yang tersedia. </p>
+                    {% comment %} Tombol Logout {% endcomment %}
+                    <a type="button" href="{% url 'main:logout' %}" class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-box-arrow-right"></i>
+                    </a>
+                </li>
+            </ul>
 
-        {% for item in items %}
-            <tr>
-                <td>{{item.name}}</td>
-                <td><center>{{item.amount}}</center></td>
-                <td>{{item.description}}</td>
+        </div>
+    </nav>
 
-                <td href="{% url 'main:create_item' %}">
-                    <form method="POST" action="{% url 'main:add_amount' item.id %}">
-                        {% csrf_token %}
-                        <center> <button> + </button> </center>
-                    </form>
-                </td>
-
-                <td href="{% url 'main:create_item' %}">
-                    <form method="POST" action="{% url 'main:remove_amount' item.id %}">
-                        {% csrf_token %}
-                        <center> <button> - </button> </center>
-                    </form>
-                </td>
-
-                <td href="{% url 'main:create_item' %}">
-                    <form method="POST" action="{% url 'main:remove_all_amount' item.id %}">
-                        {% csrf_token %}
-                        <center> <button> Remove </button> </center>
-                    </form>
-                </td>
-
-            </tr>
-        {% endfor %}
-    </table>
+    <div class="container">
+        <center>
+            <h3> Selamat datang, </h3>
+            <h1 style="font-weight: bold;"> {{ name }}!</h1>
+            <h3> di DepoAMC </h3>
+            <pre> "Material Berkualitas, Kepuasan Terjamin." </pre>
+            <p style="color: darkgray;"> Sesi terakhir login: {{ last_login }} </p>
+        </center>
     
-    <!-- <br /> -->
+        <hr>
+        <hr>
 
-    <h5>Sesi terakhir login: {{ last_login }}</h5>
-    
-    <a href="{% url 'main:create_item' %}">
-        <button>
-            Add New Item
-        </button>
-    </a>
+        <center>
+            <p> Terdapat <b> {{ items.count }} material atau bahan </b> yang Anda tambahkan. </p>
+        </center>
+    </div>
 
-    <a href="{% url 'main:logout' %}">
-        <button>
-            Logout
-        </button>
-    </a>
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for item in items %}
+                <div class="col">
+                    <div class="card h-100 {% if forloop.last %}text-bg-info{% endif %}">
+                        <div class="card-header" style="display: flex;">
+                            <h5 style="flex-grow: 1;"> {{item.name}} {% if forloop.last %}(Terbaru!){% endif %} </h5>
+                            <a class="btn btn-sm" type="button" href="{% url 'main:remove_all_amount' item.pk %}"> <i class="bi bi-trash"></i> </a>
+                            <a class="btn btn-sm" type="button" href="{% url 'main:edit_item' item.pk %}"> <i class="bi bi-pen"></i> </a>
+                        </div>
+                        
+                        <div class="card-body">
+                            <p class="card-text">{{item.description}}</p>
+                        </div>
+
+                        <div class="card-footer" style="display: flex; justify-content: space-evenly; align-items: center; text-align: center;">
+                            <a class="btn btn-sm" type="button" href="{% url 'main:remove_amount' item.pk %}"> <i class="bi bi-dash-lg"></i> </a>
+                            <h6> {{item.amount}} </h6>
+                            <a class="btn btn-sm" type="button" href="{% url 'main:add_amount' item.pk %}"> <i class="bi bi-plus-lg"></i> </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
 {% endblock content %}
