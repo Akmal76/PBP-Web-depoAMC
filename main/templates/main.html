@@ -98,7 +98,7 @@
                 htmlString += `<div class="col">
                     <div class="card h-100 ${index === items.length - 1 ? 'text-bg-info' : ''}">
                         <div class="card-header" style="display: flex;">
-                            <h5 style="flex-grow: 1;"> ${item.fields.name} {% if forloop.last %}(Terbaru!){% endif %} </h5>
+                            <h5 style="flex-grow: 1;"> ${item.fields.name} ${index === items.length - 1 ? '(Terbaru!)' : ''} </h5>
                             <a class="btn btn-sm" type="button" onclick="deleteItem(${item.pk})"> <i class="bi bi-trash"></i> </a>
                             <a class="btn btn-sm" type="button" href="edit-item/${item.pk}"> <i class="bi bi-pen"></i> </a>
                         </div>
