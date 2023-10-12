@@ -665,7 +665,8 @@ Terakhir, tampilkan cookie nya ke dalam `main.html`.
 ```
 </details>
 
-# Tugas 5: Desain Web menggunakan HTML, CSS dan Framework CSS
+<details>
+<summary> <b> Tugas 5: Desain Web menggunakan HTML, CSS dan Framework CSS </b> </summary>
 
 ## *Element Selector* pada CSS
 *Element Selector* pada CSS adalah salah satu jenis *selector* untuk mengubah *style* elemen HTML dengan *tag* yang spesifik. *Element Selector* ini memiliki beberapa manfaat, yaitu:
@@ -827,3 +828,166 @@ Salah satu hasilnya akan seperti ini.
 
 ## Referensi
 Indeed: [Margin vs. Padding in Web Design: What's the Difference?](https://www.indeed.com/career-advice/career-development/margin-vs-padding)
+</details>
+
+# Tugas 6: JavaScript dan Asynchronous JavaScript
+## *Asynchronous Programming* dan *Synchronous Programming*
+| Aspek | Synchronous Programming | Asynchronous Programming    |
+|--|---|--|
+| Responsifitas | Aplikasi terasa lambat ketika menunggu operasi selesai | Aplikasi tetap responsif selama menunggu operasi asinkron |
+| Efisiensi | Cocok untuk operasi yang memerlukan waktu lama karena harus menunggu operasi lain selesai | Cocok untuk operasi yang memerlukan waktu sedikit karena operasi lain berjalan secara simultan |
+| Contoh Implementasi | Mengambil data dari *server* dengan AJAX | Mengirim *request* AJAX ke *server* tanpa menghentikan eksekusi kode JavaScript utama |
+
+## Penerapan Paradigma *Event-driven Programming*
+Paradigma *event-driven programming* adalah paradigma pemrograman di mana aplikasi merespons *events* yang terjadi secara asinkron. Aplikasi tidak menjalankan instruksi secara berurutan namun fokus pada merespons *event* yang terjadi. 
+
+Contoh penerapan pada tugas kali ini yaitu
+1. Event Listener untuk tombol `Add Item`
+Ketika tombol `Add Item` diklik oleh *user*, *event listener* menjalankan fungsi `addItem()`. 
+
+2. Event Listener untuk AJAX *request*
+Di dalam fungsi `addItem()`, fungsi `refreshItems()` dipanggil ketika permintaan AJAX selesai dari `.then(refreshItems)` pada perintah `fetch`.
+
+## Penerapan *Asynchronous Programming* pada AJAX
+AJAX memungkinkan kita untuk berinteraksi dengan *server* tanpa harus melakukan *refresh* seluruh halaman web. Ketika pengguna mengirim *request* (berinteraksi dengan laman web), *server* memproses permintaan tersebut dan melakukan *rendering* pada bagian yang perlu diperbarui saja sebagai respons. Dengan begitu, AJAX membuat web lebih responsif dan dinamis. 
+
+## Fetch API vs. *Library* jQuery
+Menurut saya, *fetch* API digunakan dalam tugas kali ini karena aplikasi yang kita buat masih sederhana dan lebih modern serta efisien. Berikut adalah perbedaan antara Fetch API dan jQuery.
+
+**Fetch API:**
+- API modern yang dirancang untuk melakukan *request* jaringan secara **lebih kuat dan konsisten**
+- Menangani *request* dan *response* lebih mudah dengan `async` atau `await`
+- Lebih karena berfokus pada pengiriman `HTTP` dan *response*
+
+**jQuery:**
+- Dapat mengatasi kompatibilitas untuk *browser* yang berbeda
+- Mudah digunakan oleh *developer* karena lebih "abstrak"
+
+Dengan begitu, dapat disimpulkan bahwa Fetch API cocok untuk pemula sedangkan jQuery cocok untuk *developer* yang sudah berpengalaman.
+
+## Implementasi AJAX
+### Membuat Fungsi untuk Mengembalikan Data JSON dan Menambahkan Item dengan AJAX
+Pertama, saya membuat fungsi yang mengembalikan data dalam bentuk JSON yang akan digunakan untuk `fetch` pada `main.html`.
+```python
+def get_item_json(request):
+    item = Item.objects.filter(user=request.user)
+    return HttpResponse(serializers.serialize('json', item))
+```
+
+Selanjutnya mengubah cara menambahkan item dengan menggunakan AJAX. Pada `views.py`, saya membuat fungsi `add_item_ajax` dengan dekorator `@csrf_exempt` untuk memberitahu banyak fungsi ini tidak perlu *token* CSRF.
+
+```python
+@csrf_exempt
+def add_item_ajax(request):
+    if request.method == 'POST':
+        name = request.POST.get("name")
+        amount = request.POST.get("amount")
+        description = request.POST.get("description")
+        user = request.user
+
+        new_item = Item(name=name, amount=amount, description=description, user=user)
+        new_item.save()
+
+        return HttpResponse(b"CREATED", status=201)
+
+    return HttpResponseNotFound()
+```
+
+Jangan lupa untuk menambahkan *path url* pada `urls.py`
+```python
+    path('get-item/', get_item_json, name='get_item_json'),
+    path('create-ajax/', add_item_ajax, name='add_item_ajax'),
+```
+
+### Menampilkan Item dengan `Fetch()` API
+Pada `main.html`, *cards* yang sudah saya buat sebelumnya akan dihapus kontennya dan ditambahkan id.
+```html
+<div class="container" id="item_card"></div>
+```
+Tambahkan *script* JavaScript untuk mengembalikan dan menampilkan data item secara *asynchronous*.
+```html
+<script>
+    async function getItems() {
+        return fetch("{% url 'main:get_item_json' %}").then((res) => res.json())
+    }
+
+    async function refreshItems() {
+        document.getElementById("item_card").innerHTML = ""
+        const items = await getItems()
+
+        let htmlString =
+        `<center>
+            <p> Terdapat <b> ${ items.length } material atau bahan </b> yang Anda tambahkan. </p>
+        </center>
+        <div class="row row-cols-1 row-cols-md-3 g-4">`
+        items.forEach((item, index) => {
+            htmlString += `<div class="col">
+                ... < panjang :D > ....
+            </div>` 
+        })
+        htmlString += '</div>'
+        
+        document.getElementById("item_card").innerHTML = htmlString
+    }
+
+    refreshItems()
+</script>
+```
+Fungsi `refreshItems()` digunakan untuk melakukan *refresh* item secara *asynchronous*.
+
+### Membuat Modal Form dalam Menambahkan Item
+Berikut adalah implementasi modal saya.
+```html
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Item</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="form" onsubmit="return false;">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="name" class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="name" name="name"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="amount" class="col-form-label">Amount:</label>
+                        <input type="number" class="form-control" id="amount" name="amount"></input>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="col-form-label">Description:</label>
+                        <textarea class="form-control" id="description" name="description"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Item</button>
+            </div>
+        </div>
+    </div>
+</div>
+```
+Ubah `button` yang ada pada *navigation bar* menjadi seperti ini.
+```html
+<a type="button" class="btn btn-outline-light btn-sm" style="margin-right: 10px;" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <i class="bi bi-bag-plus"></i>
+</a>
+```
+### Menambahkan Data Item dengan AJAX
+Saya membuat fungsi JavaScript untuk menambahkan data ke *database* dengan AJAX.
+```javascript
+function addItem() {
+    fetch("{% url 'main:add_item_ajax' %}", {
+        method: "POST",
+        body: new FormData(document.querySelector('#form'))
+    }).then(refreshItems)
+
+    document.getElementById("form").reset()
+    return false
+}
+
+document.getElementById("button_add").onclick = addItem
+```

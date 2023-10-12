@@ -16,8 +16,7 @@
 
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item active">
-                    {% comment %} Tombol Add Item {% endcomment %}
-                    <a type="button" href="{% url 'main:create_item' %}" class="btn btn-outline-light btn-sm" style="margin-right: 10px;">
+                    <a type="button" class="btn btn-outline-light btn-sm" style="margin-right: 10px;" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         <i class="bi bi-bag-plus"></i>
                     </a>
 
@@ -43,35 +42,105 @@
         <hr>
         <hr>
 
-        <center>
-            <p> Terdapat <b> {{ items.count }} material atau bahan </b> yang Anda tambahkan. </p>
-        </center>
     </div>
+    
+    <div class="container" id="item_card"></div>
 
-    <div class="container">
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            {% for item in items %}
-                <div class="col">
-                    <div class="card h-100 {% if forloop.last %}text-bg-info{% endif %}">
-                        <div class="card-header" style="display: flex;">
-                            <h5 style="flex-grow: 1;"> {{item.name}} {% if forloop.last %}(Terbaru!){% endif %} </h5>
-                            <a class="btn btn-sm" type="button" href="{% url 'main:remove_all_amount' item.pk %}"> <i class="bi bi-trash"></i> </a>
-                            <a class="btn btn-sm" type="button" href="{% url 'main:edit_item' item.pk %}"> <i class="bi bi-pen"></i> </a>
-                        </div>
-                        
-                        <div class="card-body">
-                            <p class="card-text">{{item.description}}</p>
-                        </div>
-
-                        <div class="card-footer" style="display: flex; justify-content: space-evenly; align-items: center; text-align: center;">
-                            <a class="btn btn-sm" type="button" href="{% url 'main:remove_amount' item.pk %}"> <i class="bi bi-dash-lg"></i> </a>
-                            <h6> {{item.amount}} </h6>
-                            <a class="btn btn-sm" type="button" href="{% url 'main:add_amount' item.pk %}"> <i class="bi bi-plus-lg"></i> </a>
-                        </div>
-                    </div>
+    {% comment %} Modal {% endcomment %}
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Item</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            {% endfor %}
+                <div class="modal-body">
+                    <form id="form" onsubmit="return false;">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="name" class="col-form-label">Name:</label>
+                            <input type="text" class="form-control" id="name" name="name"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="amount" class="col-form-label">Amount:</label>
+                            <input type="number" class="form-control" id="amount" name="amount"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="col-form-label">Description:</label>
+                            <textarea class="form-control" id="description" name="description"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Item</button>
+                </div>
+            </div>
         </div>
     </div>
 
+    {% comment %} Script {% endcomment %}
+    <script>
+        async function getItems() {
+            return fetch("{% url 'main:get_item_json' %}").then((res) => res.json())
+        }
+
+        async function refreshItems() {
+            document.getElementById("item_card").innerHTML = ""
+            const items = await getItems()
+
+            let htmlString =
+            `<center>
+                <p> Terdapat <b> ${ items.length } material atau bahan </b> yang Anda tambahkan. </p>
+            </center>
+            <div class="row row-cols-1 row-cols-md-3 g-4">`
+            items.forEach((item, index) => {
+                htmlString += `<div class="col">
+                    <div class="card h-100 ${index === items.length - 1 ? 'text-bg-info' : ''}">
+                        <div class="card-header" style="display: flex;">
+                            <h5 style="flex-grow: 1;"> ${item.fields.name} {% if forloop.last %}(Terbaru!){% endif %} </h5>
+                            <a class="btn btn-sm" type="button" onclick="deleteItem(${item.pk})"> <i class="bi bi-trash"></i> </a>
+                            <a class="btn btn-sm" type="button" href="edit-item/${item.pk}"> <i class="bi bi-pen"></i> </a>
+                        </div>
+                        
+                        <div class="card-body">
+                            <p class="card-text">${item.fields.description}</p>
+                        </div>
+
+                        <div class="card-footer" style="display: flex; justify-content: space-evenly; align-items: center; text-align: center;">
+                            <a class="btn btn-sm" type="button" href="remove_amount/${item.pk}"> <i class="bi bi-dash-lg"></i> </a>
+                            <h6> ${item.fields.amount} </h6>
+                            <a class="btn btn-sm" type="button" href="add_amount/${item.pk}"> <i class="bi bi-plus-lg"></i> </a>
+                        </div>
+                    </div>
+                </div>` 
+            })
+            htmlString += '</div>'
+            
+            document.getElementById("item_card").innerHTML = htmlString
+        }
+    
+        refreshItems()
+
+        function addItem() {
+            fetch("{% url 'main:add_item_ajax' %}", {
+                method: "POST",
+                body: new FormData(document.querySelector('#form'))
+            }).then(refreshItems)
+    
+            document.getElementById("form").reset()
+            return false
+        }
+
+        document.getElementById("button_add").onclick = addItem
+
+        function deleteItem(id) {
+            fetch(`delete-ajax/${id}/`, {
+                method: "DELETE"
+            }).then(refreshItems)
+
+            return false
+        }
+
+    </script>
 {% endblock content %}
