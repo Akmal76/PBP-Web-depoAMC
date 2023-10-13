@@ -4,7 +4,7 @@
 > **depoAMC** adalah aplikasi pengelolaan penyimpanan berbagai macam bahan dan perlengkapan yang diperlukan untuk proyek konstruksi, renovasi, perbaikan, atau pembangunan properti. 
 
 ## 👷🪓🪚 **Laman** 🚜⛏️🦺🔨
-[Klik disini untuk mengunjungi laman DepoAMC](https://akmal-ramadhan21-tugas.pbp.cs.ui.ac.id/)
+[Klik disini untuk mengunjungi laman DepoAMC](http://akmal-ramadhan21-tugas.pbp.cs.ui.ac.id/)
 
 <details>
 <summary> <b> Tugas 2: Implementasi Model-View-Template (MVT) pada Django </b> </summary>
