@@ -1,7 +1,7 @@
 # depoAMC
 
-**Tugas - Pemrograman Berbasis Platform - Kelas D**
-> **depoAMC** adalah aplikasi pengelolaan penyimpanan berbagai macam bahan dan perlengkapan yang diperlukan untuk proyek konstruksi, renovasi, perbaikan, atau pembangunan properti. 
+**Tugas - Pemrograman Berbasis Platform - Kelas PBP D**
+> **depoAMC** adalah aplikasi pengelolaan penyimpanan berbagai macam bahan dan perlengkapan yang diperlukan untuk proyek konstruksi, renovasi, perbaikan, atau pembangunan properti.
 
 ## 👷🪓🪚 **Laman** 🚜⛏️🦺🔨
 [Klik disini untuk mengunjungi laman DepoAMC!](http://akmal-ramadhan21-tugas.pbp.cs.ui.ac.id/)
