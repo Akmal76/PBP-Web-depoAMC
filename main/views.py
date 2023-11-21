@@ -160,7 +160,7 @@ def create_product_flutter(request):
         new_product = Item.objects.create(
             user = request.user,
             name = data["name"],
-            price = int(data["price"]),
+            amount = int(data["amount"]),
             description = data["description"]
         )
 
@@ -169,3 +169,10 @@ def create_product_flutter(request):
         return JsonResponse({"status": "success"}, status=200)
     else:
         return JsonResponse({"status": "error"}, status=401)
+    
+def user_items_api(request):
+    user_items = Item.objects.filter(user=request.user)
+    items_data =[{'name': item.name, 'amount': item.amount, 'description': item.description} for item in user_items]
+    # return JsonResponse({'items': items_data})
+    item = Item.objects.filter(user=request.user)
+    return HttpResponse(serializers.serialize("json", item), content_type="application/json")
